@@ -19,10 +19,6 @@ export async function getBooking(req: AuthenticatedRequest, res: Response) {
 export async function postBooking(req: AuthenticatedRequest, res: Response) {
   const { userId } = req;
   const { roomId } = req.body as { roomId: number };
-  if (!roomId) {
-    res.sendStatus(httpStatus.BAD_REQUEST);
-    return;
-  }
 
   try {
     const bookingConfirmation = await bookingService.postBooking(userId, roomId);
@@ -33,7 +29,7 @@ export async function postBooking(req: AuthenticatedRequest, res: Response) {
       res.sendStatus(httpStatus.NOT_FOUND);
     }
     if (error.name === 'CannotBookingError') {
-      res.sendStatus(httpStatus.PAYMENT_REQUIRED);
+      res.sendStatus(httpStatus.FORBIDDEN);
     }
   }
 }
